@@ -1,0 +1,7 @@
+<html>
+	<body>
+		<img src="cid:Logo"/>
+		<h4>${name}</h4>
+		<i>${value}</i>
+	</body>
+</html>
