@@ -1,5 +1,8 @@
 package spitter.activemq;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.activemq.command.ActiveMQTopic;
@@ -10,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.connection.SingleConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
-import org.springframework.jms.support.converter.MessageConverter;
 
 /**
  * 对应的xml配置文件是spring-activemq.xml
@@ -28,7 +30,12 @@ public class ActiveMQConfig {
 	// 真正可以连接ActiveMQ的ConnectionFactory(厂商)
 	@Bean
 	public ActiveMQConnectionFactory activeMQConnectionFactory(){
-		return new ActiveMQConnectionFactory("tcp://localhost:61616");
+		ActiveMQConnectionFactory activeMQ = new ActiveMQConnectionFactory("tcp://localhost:61616");
+		activeMQ.setTrustAllPackages(true);// 允许用户关闭安全检查，并相信所有类。它对于测试目的很有用
+		//activeMQ.setTrustedPackages(new ArrayList<String>(
+		//		Arrays.asList("spitter.entity.User,spitter.entity.Company".split(","))));
+		// 允许指定包都被信任
+		return activeMQ;
 	}
 	
 	//ActiveMQ为我们提供了一个PooledConnectionFactory，通过往里面注入一个ActiveMQConnectionFactory
@@ -42,7 +49,7 @@ public class ActiveMQConfig {
 	
 	// Spring提供的JMS工具类，它可以进行消息发送、接收等
 	@Bean
-	public JmsTemplate jmsTemplate(SingleConnectionFactory connectionFactory,MessageConverter messageConverter){
+	public JmsTemplate jmsTemplate(SingleConnectionFactory connectionFactory,UserMessageConverter messageConverter){
 		JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory);
 		jmsTemplate.setMessageConverter(messageConverter);// 设置消息转换器
 		return jmsTemplate;

@@ -15,7 +15,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 public class WebConfig extends WebMvcConfigurerAdapter {
 	@Bean
 	public ViewResolver viewResolver(){// 配置JSP视图解析器(Spring默认视图解析器)
-		System.out.println("WebConfig");
+		System.out.println("ViewResolver");
 		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
 		resolver.setPrefix("/pages/");
 		resolver.setSuffix(".jsp");
